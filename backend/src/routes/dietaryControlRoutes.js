@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { crearRegistroAlimentacion, obtenerAlimentacionPorUsuario } from '../controllers/dietaryControlController.js';
+
 const router = express.Router();
-const { crearRegistroAlimentacion, obtenerAlimentacionPorUsuario } = require('../controllers/dietaryControlController');
 router.post('/', crearRegistroAlimentacion);
 router.get('/usuario/:usuarioId', obtenerAlimentacionPorUsuario);
-module.exports = router;
+
+export default router;

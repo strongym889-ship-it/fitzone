@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const physicalMeasurementSchema = new mongoose.Schema({
   usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   fecha: { type: Date, default: Date.now },
@@ -13,4 +14,5 @@ const physicalMeasurementSchema = new mongoose.Schema({
     brazo: Number
   }
 }, { collection: 'physical_measurements' });
-module.exports = mongoose.model('PhysicalMeasurement', physicalMeasurementSchema);
+
+export default mongoose.model('PhysicalMeasurement', physicalMeasurementSchema);

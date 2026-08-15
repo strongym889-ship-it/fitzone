@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { crearPeriodo, obtenerPeriodosPorUsuario } from '../controllers/trainingPeriodController.js';
+
 const router = express.Router();
-const { crearPeriodo, obtenerPeriodosPorUsuario } = require('../controllers/trainingPeriodController');
 router.post('/', crearPeriodo);
 router.get('/usuario/:usuarioId', obtenerPeriodosPorUsuario);
-module.exports = router;
+
+export default router;

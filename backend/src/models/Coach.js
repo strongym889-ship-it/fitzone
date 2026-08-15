@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const coachSchema = new mongoose.Schema({
   nombre: String,
@@ -8,4 +8,4 @@ const coachSchema = new mongoose.Schema({
   clientesAsignados: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 }, { collection: 'coaches' });
 
-module.exports = mongoose.model('Coach', coachSchema);
+export default mongoose.model('Coach', coachSchema);

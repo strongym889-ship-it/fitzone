@@ -1,19 +1,11 @@
-const Coach = require('../models/Coach');
+import Coach from '../models/Coach.js';
 
-exports.crearCoach = async (req, res) => {
-  try {
-    const nuevoCoach = await Coach.create(req.body);
-    res.status(201).json(nuevoCoach);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+export const crearCoach = async (req, res) => {
+  try { res.status(201).json(await Coach.create(req.body)); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 };
 
-exports.obtenerCoaches = async (req, res) => {
-  try {
-    const coaches = await Coach.find();
-    res.json(coaches);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+export const obtenerCoaches = async (req, res) => {
+  try { res.json(await Coach.find()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 };

@@ -1,8 +1,11 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import User from '../models/User.js';
+import transporter from '../config/mailer.js';
 
-exports.registrarUsuario = async (req, res) => {
+// Registro
+export const registrarUsuario = async (req, res) => {
   try {
     const { nombre, email, password, telefono } = req.body;
     const existe = await User.findOne({ email });
@@ -17,7 +20,8 @@ exports.registrarUsuario = async (req, res) => {
   }
 };
 
-exports.iniciarSesion = async (req, res) => {
+// Inicio de sesión
+export const iniciarSesion = async (req, res) => {
   try {
     const { email, password } = req.body;
     const usuario = await User.findOne({ email });
@@ -33,11 +37,65 @@ exports.iniciarSesion = async (req, res) => {
   }
 };
 
-exports.obtenerUsuario = async (req, res) => {
+// Obtener perfil
+export const obtenerUsuario = async (req, res) => {
   try {
     const usuario = await User.findById(req.params.id);
     if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     res.json(usuario);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Solicitar recuperación de contraseña
+export const solicitarRecuperacion = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const usuario = await User.findOne({ email });
+    if (!usuario) return res.status(404).json({ mensaje: 'No existe una cuenta con ese correo' });
+
+    const token = crypto.randomBytes(32).toString('hex');
+    usuario.resetPasswordToken = token;
+    usuario.resetPasswordExpira = Date.now() + 3600000; // 1 hora
+    await usuario.save();
+
+    const enlace = `http://localhost:4000/api/users/reset-password/${token}`;
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: usuario.email,
+      subject: 'Recuperación de contraseña - FitZone',
+      html: `<p>Hola ${usuario.nombre},</p>
+             <p>Solicitaste recuperar tu contraseña. Este enlace vence en 1 hora:</p>
+             <a href="${enlace}">${enlace}</a>`
+    });
+
+    res.json({ mensaje: 'Se envió un correo con las instrucciones' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Restablecer contraseña
+export const restablecerPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const usuario = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpira: { $gt: Date.now() }
+    });
+
+    if (!usuario) return res.status(400).json({ mensaje: 'Token inválido o expirado' });
+
+    usuario.passwordHash = await bcrypt.hash(password, 10);
+    usuario.resetPasswordToken = undefined;
+    usuario.resetPasswordExpira = undefined;
+    await usuario.save();
+
+    res.json({ mensaje: 'Contraseña actualizada correctamente' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

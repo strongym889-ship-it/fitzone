@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const trainingParameterSchema = new mongoose.Schema({
   usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   fecha: { type: Date, default: Date.now },
@@ -8,4 +9,5 @@ const trainingParameterSchema = new mongoose.Schema({
   peso: Number,
   duracionMinutos: Number
 }, { collection: 'training_parameters' });
-module.exports = mongoose.model('TrainingParameter', trainingParameterSchema);
+
+export default mongoose.model('TrainingParameter', trainingParameterSchema);

@@ -1,19 +1,11 @@
-const Plan = require('../models/Plan');
+import Plan from '../models/Plan.js';
 
-exports.crearPlan = async (req, res) => {
-  try {
-    const nuevoPlan = await Plan.create(req.body);
-    res.status(201).json(nuevoPlan);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+export const crearPlan = async (req, res) => {
+  try { res.status(201).json(await Plan.create(req.body)); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 };
 
-exports.obtenerPlanes = async (req, res) => {
-  try {
-    const planes = await Plan.find();
-    res.json(planes);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+export const obtenerPlanes = async (req, res) => {
+  try { res.json(await Plan.find()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 };

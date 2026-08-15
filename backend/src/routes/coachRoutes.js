@@ -1,8 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const { crearCoach, obtenerCoaches } = require('../controllers/coachController');
+import express from 'express';
+import { crearCoach, obtenerCoaches } from '../controllers/coachController.js';
 
+const router = express.Router();
 router.post('/', crearCoach);
 router.get('/', obtenerCoaches);
 
-module.exports = router;
+export default router;

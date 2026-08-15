@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { crearRegistroSueno, obtenerSuenoPorUsuario } from '../controllers/sleepQualityController.js';
+
 const router = express.Router();
-const { crearRegistroSueno, obtenerSuenoPorUsuario } = require('../controllers/sleepQualityController');
 router.post('/', crearRegistroSueno);
 router.get('/usuario/:usuarioId', obtenerSuenoPorUsuario);
-module.exports = router;
+
+export default router;

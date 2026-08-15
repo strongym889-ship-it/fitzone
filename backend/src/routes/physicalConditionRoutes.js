@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { crearCondicion, obtenerCondicionPorUsuario } from '../controllers/physicalConditionController.js';
+
 const router = express.Router();
-const { crearCondicion, obtenerCondicionPorUsuario } = require('../controllers/physicalConditionController');
 router.post('/', crearCondicion);
 router.get('/usuario/:usuarioId', obtenerCondicionPorUsuario);
-module.exports = router;
+
+export default router;

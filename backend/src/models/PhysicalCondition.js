@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const physicalConditionSchema = new mongoose.Schema({
   usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   nivel: { type: String, enum: ['principiante', 'intermedio', 'avanzado'] },
@@ -6,4 +7,5 @@ const physicalConditionSchema = new mongoose.Schema({
   restricciones: [String],
   observacionesMedicas: String
 }, { collection: 'physical_conditions' });
-module.exports = mongoose.model('PhysicalCondition', physicalConditionSchema);
+
+export default mongoose.model('PhysicalCondition', physicalConditionSchema);

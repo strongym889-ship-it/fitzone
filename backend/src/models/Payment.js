@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const paymentSchema = new mongoose.Schema({
   usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   suscripcionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Subscription' },
@@ -8,4 +9,5 @@ const paymentSchema = new mongoose.Schema({
   estado: { type: String, enum: ['aprobado', 'pendiente', 'rechazado'], default: 'pendiente' },
   referenciaTransaccion: String
 }, { collection: 'payments' });
-module.exports = mongoose.model('Payment', paymentSchema);
+
+export default mongoose.model('Payment', paymentSchema);

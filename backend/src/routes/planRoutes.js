@@ -1,8 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const { crearPlan, obtenerPlanes } = require('../controllers/planController');
+import express from 'express';
+import { crearPlan, obtenerPlanes } from '../controllers/planController.js';
 
+const router = express.Router();
 router.post('/', crearPlan);
 router.get('/', obtenerPlanes);
 
-module.exports = router;
+export default router;

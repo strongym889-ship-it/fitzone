@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const sleepQualitySchema = new mongoose.Schema({
   usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   fecha: { type: Date, default: Date.now },
@@ -6,4 +7,5 @@ const sleepQualitySchema = new mongoose.Schema({
   calidadPercibida: Number,
   interrupciones: Number
 }, { collection: 'sleep_quality' });
-module.exports = mongoose.model('SleepQuality', sleepQualitySchema);
+
+export default mongoose.model('SleepQuality', sleepQualitySchema);

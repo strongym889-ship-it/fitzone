@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   nombre: String,
@@ -9,7 +9,9 @@ const userSchema = new mongoose.Schema({
   rol: { type: String, enum: ['cliente', 'entrenador', 'admin'], default: 'cliente' },
   estadoCuenta: { type: String, enum: ['activo', 'inactivo', 'suspendido'], default: 'activo' },
   entrenadorAsignado: { type: mongoose.Schema.Types.ObjectId, ref: 'Coach' },
-  planActual: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' }
+  planActual: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' },
+  resetPasswordToken: String,
+  resetPasswordExpira: Date
 }, { collection: 'users' });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

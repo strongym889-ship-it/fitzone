@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const trainingPeriodSchema = new mongoose.Schema({
   usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   duracionSemanas: Number,
@@ -6,4 +7,5 @@ const trainingPeriodSchema = new mongoose.Schema({
   fechaFin: Date,
   objetivo: String
 }, { collection: 'training_periods' });
-module.exports = mongoose.model('TrainingPeriod', trainingPeriodSchema);
+
+export default mongoose.model('TrainingPeriod', trainingPeriodSchema);

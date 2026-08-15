@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { crearNotificacion, obtenerNotificacionesPorUsuario } from '../controllers/notificationController.js';
+
 const router = express.Router();
-const { crearNotificacion, obtenerNotificacionesPorUsuario } = require('../controllers/notificationController');
 router.post('/', crearNotificacion);
 router.get('/usuario/:usuarioId', obtenerNotificacionesPorUsuario);
-module.exports = router;
+
+export default router;

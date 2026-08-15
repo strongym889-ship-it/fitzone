@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { crearGrupo, obtenerGrupos } from '../controllers/groupController.js';
+
 const router = express.Router();
-const { crearGrupo, obtenerGrupos } = require('../controllers/groupController');
 router.post('/', crearGrupo);
 router.get('/', obtenerGrupos);
-module.exports = router;
+
+export default router;

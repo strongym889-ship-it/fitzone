@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const dietaryControlSchema = new mongoose.Schema({
   usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   fecha: { type: Date, default: Date.now },
@@ -9,4 +10,5 @@ const dietaryControlSchema = new mongoose.Schema({
   }],
   aguaLitros: Number
 }, { collection: 'dietary_control' });
-module.exports = mongoose.model('DietaryControl', dietaryControlSchema);
+
+export default mongoose.model('DietaryControl', dietaryControlSchema);

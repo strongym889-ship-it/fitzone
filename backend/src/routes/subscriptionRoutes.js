@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { crearSuscripcion, obtenerSuscripcionPorUsuario } from '../controllers/subscriptionController.js';
+
 const router = express.Router();
-const { crearSuscripcion, obtenerSuscripcionPorUsuario } = require('../controllers/subscriptionController');
 router.post('/', crearSuscripcion);
 router.get('/usuario/:usuarioId', obtenerSuscripcionPorUsuario);
-module.exports = router;
+
+export default router;

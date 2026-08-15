@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { crearFrecuencia, obtenerFrecuenciaPorUsuario } from '../controllers/trainingFrequencyController.js';
+
 const router = express.Router();
-const { crearFrecuencia, obtenerFrecuenciaPorUsuario } = require('../controllers/trainingFrequencyController');
 router.post('/', crearFrecuencia);
 router.get('/usuario/:usuarioId', obtenerFrecuenciaPorUsuario);
-module.exports = router;
+
+export default router;

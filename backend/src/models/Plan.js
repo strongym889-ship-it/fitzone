@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const planSchema = new mongoose.Schema({
   nombre: String,
@@ -8,4 +8,4 @@ const planSchema = new mongoose.Schema({
   beneficios: [String]
 }, { collection: 'plans' });
 
-module.exports = mongoose.model('Plan', planSchema);
+export default mongoose.model('Plan', planSchema);

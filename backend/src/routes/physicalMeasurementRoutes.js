@@ -1,6 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { crearMedicion, obtenerMedicionesPorUsuario } from '../controllers/physicalMeasurementController.js';
+
 const router = express.Router();
-const { crearMedicion, obtenerMedicionesPorUsuario } = require('../controllers/physicalMeasurementController');
 router.post('/', crearMedicion);
 router.get('/usuario/:usuarioId', obtenerMedicionesPorUsuario);
-module.exports = router;
+
+export default router;

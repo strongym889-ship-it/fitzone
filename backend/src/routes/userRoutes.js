@@ -1,9 +1,18 @@
-const express = require('express');
+import express from 'express';
+import {
+  registrarUsuario,
+  iniciarSesion,
+  obtenerUsuario,
+  solicitarRecuperacion,
+  restablecerPassword
+} from '../controllers/userController.js';
+
 const router = express.Router();
-const { registrarUsuario, iniciarSesion, obtenerUsuario } = require('../controllers/userController');
 
 router.post('/register', registrarUsuario);
 router.post('/login', iniciarSesion);
 router.get('/:id', obtenerUsuario);
+router.post('/forgot-password', solicitarRecuperacion);
+router.post('/reset-password/:token', restablecerPassword);
 
-module.exports = router;
+export default router;
