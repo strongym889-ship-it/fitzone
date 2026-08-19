@@ -2,6 +2,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import User from '../models/User.js';
+import Plan from '../models/Plan.js';
+import Subscription from '../models/Subscription.js';
 import transporter from '../config/mailer.js';
 
 // Registro
@@ -12,9 +14,30 @@ export const registrarUsuario = async (req, res) => {
     if (existe) return res.status(400).json({ mensaje: 'El correo ya está registrado' });
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const nuevoUsuario = await User.create({ nombre, email, passwordHash, telefono });
 
-    res.status(201).json({ mensaje: 'Usuario registrado', usuario: nuevoUsuario });
+    // Busca el plan gratuito ya creado en la colección "plans"
+    const planGratuito = await Plan.findOne({ esGratuito: true });
+    if (!planGratuito) return res.status(500).json({ mensaje: 'No existe un plan gratuito configurado en la base de datos' });
+
+    const nuevoUsuario = await User.create({
+      nombre, email, passwordHash, telefono,
+      planActual: planGratuito._id
+    });
+
+    // Crea la suscripción gratuita de 3 días automáticamente
+    const fechaInicio = new Date();
+    const fechaFin = new Date();
+    fechaFin.setDate(fechaFin.getDate() + planGratuito.duracionDias);
+
+    await Subscription.create({
+      usuarioId: nuevoUsuario._id,
+      planId: planGratuito._id,
+      fechaInicio,
+      fechaFin,
+      estado: 'activa'
+    });
+
+    res.status(201).json({ mensaje: 'Usuario registrado con plan gratuito de 3 días', usuario: nuevoUsuario });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
