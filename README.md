@@ -1,6 +1,4 @@
-Aquí tienes todo el archivo `README.md` formateado en un **único bloque de código completo**, listo para que lo copies y pegues directamente en el repositorio:
 
-```
 # 🏋️‍♂️ Fitzone App - Sistema de Gestión de Entrenamiento Personalizado
 
 > **Fitzone App** es una plataforma digital (móvil y web) diseñada para optimizar la experiencia de entrenamiento personalizado en gimnasios de alta afluencia (diseñada conceptualmente para *Strong Gym*). Permite a los usuarios acceder de manera autónoma a sus rutinas, planes de alimentación y seguimiento físico, aliviando la carga de trabajo de los entrenadores y garantizando la continuidad en la atención al cliente.
@@ -190,10 +188,3 @@ Proyecto diseñado y desarrollado por:
 * **Yasmin Lorena Vélez Falla**
 * *Rol:* Diseñadora, analista y programadora.
 
-
-
-
-
-```
-
-```
