@@ -4,18 +4,6 @@
 
 ---
 
-## 📋 Tabla de Contenidos
-- [Descripción General](#-descripción-general)
-- [🛠 Stack Tecnológico](#-stack-tecnológico)
-- [✨ Características del Proyecto](#-características-del-proyecto)
-- [⚙️ Instalación y Configuración](#️-instalación-y-configuración)
-- [🏗 Estructura y Arquitectura del Proyecto](#-estructura-y-arquitectura-del-proyecto)
-  - [Frontend (Flutter)](#frontend-flutter)
-  - [Backend (Node.js + Express)](#backend-nodejs--express)
-- [👥 Autores del Proyecto](#-autores-del-proyecto)
-
----
-
 ## 📄 Descripción General
 
 En gimnasios con alta afluencia, los entrenadores cuentan con tiempo limitado para atender a cada usuario de forma personalizada. **Fitzone App** resuelve esta problemática ofreciendo una herramienta en la que:
