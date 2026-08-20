@@ -77,7 +77,7 @@ Asegúrate de tener instalado:
 
 ### **1. Clonar el repositorio**
 ```
-git clone [https://github.com/tu-usuario/fitzone-app.git](https://github.com/tu-usuario/fitzone-app.git)
+git clone https://github.com/strongym889-ship-it/fitzone
 cd fitzone-app
 
 ```
