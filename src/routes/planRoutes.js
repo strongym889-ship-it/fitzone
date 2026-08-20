@@ -1,8 +1,9 @@
 import express from 'express';
 import { crearPlan, obtenerPlanes } from '../controllers/planController.js';
+import verificarToken, { verificarAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
-router.post('/', crearPlan);
 router.get('/', obtenerPlanes);
+router.post('/', verificarToken, verificarAdmin, crearPlan);
 
 export default router;

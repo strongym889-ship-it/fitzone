@@ -15,7 +15,6 @@ export const registrarUsuario = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Busca el plan gratuito ya creado en la colección "plans"
     const planGratuito = await Plan.findOne({ esGratuito: true });
     if (!planGratuito) return res.status(500).json({ mensaje: 'No existe un plan gratuito configurado en la base de datos' });
 
@@ -24,7 +23,6 @@ export const registrarUsuario = async (req, res) => {
       planActual: planGratuito._id
     });
 
-    // Crea la suscripción gratuita de 3 días automáticamente
     const fechaInicio = new Date();
     const fechaFin = new Date();
     fechaFin.setDate(fechaFin.getDate() + planGratuito.duracionDias);
@@ -71,6 +69,17 @@ export const obtenerUsuario = async (req, res) => {
   }
 };
 
+// Actualizar usuario
+export const actualizarUsuario = async (req, res) => {
+  try {
+    const usuario = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    res.json(usuario);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Solicitar recuperación de contraseña
 export const solicitarRecuperacion = async (req, res) => {
   try {
@@ -80,7 +89,7 @@ export const solicitarRecuperacion = async (req, res) => {
 
     const token = crypto.randomBytes(32).toString('hex');
     usuario.resetPasswordToken = token;
-    usuario.resetPasswordExpira = Date.now() + 3600000; // 1 hora
+    usuario.resetPasswordExpira = Date.now() + 3600000;
     await usuario.save();
 
     const enlace = `http://localhost:4000/api/users/reset-password/${token}`;

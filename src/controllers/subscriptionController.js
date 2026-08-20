@@ -96,3 +96,19 @@ export const cambiarPlan = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Limpieza de suscripciones canceladas de un usuario (solo para pruebas/mantenimiento)
+export const limpiarCanceladas = async (req, res) => {
+  try {
+    const resultado = await Subscription.deleteMany({
+      usuarioId: req.params.usuarioId,
+      estado: 'cancelada'
+    });
+    res.json({
+      mensaje: 'Limpieza completada',
+      eliminadas: resultado.deletedCount
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
