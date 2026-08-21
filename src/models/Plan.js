@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const planSchema = new mongoose.Schema({
-  nombre: String,
+  nombre: { type: String, required: true, unique: true },
   duracionDias: Number,
   precio: Number,
   esGratuito: Boolean,

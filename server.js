@@ -17,6 +17,7 @@ import trainingFrequencyRoutes from './src/routes/trainingFrequencyRoutes.js';
 import trainingParameterRoutes from './src/routes/trainingParameterRoutes.js';
 import trainingPeriodRoutes from './src/routes/trainingPeriodRoutes.js';
 import dietaryControlRoutes from './src/routes/dietaryControlRoutes.js';
+import appointmentRoutes from './src/routes/appointmentRoutes.js';
 
 const app = express();
 connectDB();
@@ -38,6 +39,7 @@ app.use('/api/training-frequency', trainingFrequencyRoutes);
 app.use('/api/training-parameters', trainingParameterRoutes);
 app.use('/api/training-periods', trainingPeriodRoutes);
 app.use('/api/dietary-control', dietaryControlRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`🚀 Servidor corriendo en puerto ${PORT}`));

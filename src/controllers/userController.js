@@ -72,7 +72,15 @@ export const obtenerUsuario = async (req, res) => {
 // Actualizar usuario
 export const actualizarUsuario = async (req, res) => {
   try {
-    const usuario = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const datosActualizar = { ...req.body };
+
+    // Solo un admin puede cambiar el rol o el estado de la cuenta de un usuario
+    if (req.usuario?.rol !== 'admin') {
+      delete datosActualizar.rol;
+      delete datosActualizar.estadoCuenta;
+    }
+
+    const usuario = await User.findByIdAndUpdate(req.params.id, datosActualizar, { new: true });
     if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     res.json(usuario);
   } catch (error) {

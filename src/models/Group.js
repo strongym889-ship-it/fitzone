@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const groupSchema = new mongoose.Schema({
-  nombre: String,
+  nombre: { type: String, required: true, unique: true },
   entrenadorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Coach' },
   nivel: String,
   horario: String,
