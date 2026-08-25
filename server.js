@@ -43,5 +43,16 @@ app.use('/api/training-periods', trainingPeriodRoutes);
 app.use('/api/dietary-control', dietaryControlRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
+// Ruta no encontrada (404)
+app.use((req, res) => {
+  res.status(404).json({ mensaje: 'Ruta no encontrada' });
+});
+
+// Manejador de errores global
+app.use((err, req, res, next) => {
+  console.error('❌ Error no controlado:', err.stack);
+  res.status(500).json({ mensaje: 'Error interno del servidor' });
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`🚀 Servidor corriendo en puerto ${PORT}`));
