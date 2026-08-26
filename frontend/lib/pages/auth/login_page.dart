@@ -1,0 +1,451 @@
+import 'package:flutter/material.dart';
+
+import '../../app/theme.dart';
+import '../../services/api_service.dart';
+import '../../services/auth_service.dart';
+import '../../widgets/auth_background.dart';
+import '../../widgets/auth_card.dart';
+import '../../widgets/auth_text_field.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  final AuthService authService = AuthService();
+
+  bool obscurePassword = true;
+  bool loading = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> iniciarSesion() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      mostrarMensaje('Completa todos los campos');
+      return;
+    }
+
+    setState(() {
+      loading = true;
+    });
+
+    try {
+      final usuario = await authService.login(
+        email: email,
+        password: password,
+      );
+
+      if (!mounted) return;
+
+      mostrarMensaje(
+        'Bienvenido ${usuario.nombre}',
+        success: true,
+      );
+
+      /*
+        Por ahora no navegamos al Home porque todavía
+        no hemos construido esa parte.
+
+        Cuando hagamos el Home será:
+
+        Navigator.pushReplacementNamed(context, '/home');
+      */
+    } on ApiException catch (e) {
+      if (!mounted) return;
+
+      mostrarMensaje(e.message);
+    } catch (e) {
+      if (!mounted) return;
+
+      mostrarMensaje(
+        'No se pudo conectar con el servidor',
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
+    }
+  }
+
+  void mostrarMensaje(
+    String mensaje, {
+    bool success = false,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensaje),
+        backgroundColor:
+            success ? fitZoneCyan : Colors.redAccent,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: AuthBackground(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 35,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 430,
+              ),
+              child: Column(
+                children: [
+                  const _FitZoneHeader(),
+
+                  const SizedBox(height: 45),
+
+                  AuthCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Iniciar Sesión',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 25),
+
+                        const Text(
+                          'Email',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        AuthTextField(
+                          controller: emailController,
+                          hintText: 'tu@email.com',
+                          icon: Icons.email_outlined,
+                          keyboardType:
+                              TextInputType.emailAddress,
+                        ),
+
+                        const SizedBox(height: 18),
+
+                        const Text(
+                          'Contraseña',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        AuthTextField(
+                          controller: passwordController,
+                          hintText: '••••••••',
+                          icon: Icons.lock_outline,
+                          obscureText: obscurePassword,
+                          onVisibilityPressed: () {
+                            setState(() {
+                              obscurePassword =
+                                  !obscurePassword;
+                            });
+                          },
+                        ),
+
+                        const SizedBox(height: 25),
+
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: ElevatedButton(
+                            onPressed:
+                                loading ? null : iniciarSesion,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: fitZoneCyan,
+                              foregroundColor: Colors.black,
+                              disabledBackgroundColor:
+                                  fitZoneCyan.withValues(
+                                alpha: 0.5,
+                              ),
+                              shape:
+                                  RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(30),
+                              ),
+                            ),
+                            child: loading
+                                ? const SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child:
+                                        CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                : const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.login,
+                                        size: 19,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        'Iniciar Sesión',
+                                        style: TextStyle(
+                                          fontWeight:
+                                              FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        _DividerText(),
+
+                        const SizedBox(height: 18),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _SocialButton(
+                                icon: Icons.g_mobiledata,
+                                text: 'Google',
+                                onPressed: () {
+                                  mostrarMensaje(
+                                    'Google todavía no está conectado',
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: _SocialButton(
+                                icon: Icons.apple,
+                                text: 'Apple',
+                                onPressed: () {
+                                  mostrarMensaje(
+                                    'Apple todavía no está conectado',
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 18),
+
+                        Center(
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/forgot-password',
+                              );
+                            },
+                            child: const Text(
+                              '¿Olvidaste tu contraseña?',
+                              style: TextStyle(
+                                color: fitZoneCyan,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              '¿No tienes cuenta?',
+                              style: TextStyle(
+                                color: Colors.white70,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/register',
+                                );
+                              },
+                              child: const Text(
+                                'Regístrate',
+                                style: TextStyle(
+                                  color: fitZoneCyan,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FitZoneHeader extends StatelessWidget {
+  const _FitZoneHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 70,
+          height: 70,
+          decoration: const BoxDecoration(
+            color: fitZoneCyan,
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: const Text(
+            'FZ',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 10),
+
+        const Text(
+          'FitZone',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 2),
+
+        const Text(
+          'Tu entrenador personal digital',
+          style: TextStyle(
+            color: fitZoneCyan,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DividerText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Expanded(
+          child: Divider(
+            color: Colors.white24,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            'O continuar con',
+            style: TextStyle(
+              color: Colors.white54,
+              fontSize: 11,
+            ),
+          ),
+        ),
+        const Expanded(
+          child: Divider(
+            color: Colors.white24,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SocialButton extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onPressed;
+
+  const _SocialButton({
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        foregroundColor: Colors.white,
+        side: const BorderSide(
+          color: Colors.white12,
+        ),
+        minimumSize: const Size(
+          0,
+          45,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            size: 20,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

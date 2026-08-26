@@ -1,4 +1,4 @@
-# frontend
+# fitzone
 
 A new Flutter project.
 
