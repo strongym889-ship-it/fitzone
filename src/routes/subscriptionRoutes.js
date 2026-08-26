@@ -1,16 +1,21 @@
 import express from 'express';
 import {
-  crearSuscripcion, obtenerSuscripcionPorUsuario, actualizarSuscripcion,
-  verificarVencimientos, cambiarPlan, limpiarCanceladas
+  obtenerSuscripcionPorUsuario,
+  verificarVencimientos, cambiarPlan, limpiarCanceladas,
+  obtenerPendientes, aprobarSuscripcion, rechazarSuscripcion
 } from '../controllers/subscriptionController.js';
-import verificarToken, { verificarDueño } from '../middleware/authMiddleware.js';
+import verificarToken, { verificarDueño, verificarAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
-router.post('/', verificarToken, crearSuscripcion);
+
 router.get('/usuario/:usuarioId', verificarToken, verificarDueño, obtenerSuscripcionPorUsuario);
-router.put('/:id', verificarToken, actualizarSuscripcion);
-router.get('/verificar-vencimientos', verificarVencimientos);
 router.post('/cambiar-plan', verificarToken, cambiarPlan);
-router.delete('/limpiar-canceladas/:usuarioId', verificarToken, verificarDueño, limpiarCanceladas);
+
+// Solo admin
+router.get('/pendientes', verificarToken, verificarAdmin, obtenerPendientes);
+router.put('/:id/aprobar', verificarToken, verificarAdmin, aprobarSuscripcion);
+router.put('/:id/rechazar', verificarToken, verificarAdmin, rechazarSuscripcion);
+router.get('/verificar-vencimientos', verificarToken, verificarAdmin, verificarVencimientos);
+router.delete('/limpiar-canceladas/:usuarioId', verificarToken, verificarAdmin, limpiarCanceladas);
 
 export default router;

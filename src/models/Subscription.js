@@ -5,7 +5,11 @@ const subscriptionSchema = new mongoose.Schema({
   planId: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' },
   fechaInicio: Date,
   fechaFin: Date,
-  estado: { type: String, enum: ['activa', 'vencida', 'cancelada'], default: 'activa' }
+  estado: {
+    type: String,
+    enum: ['pendiente', 'activa', 'vencida', 'cancelada', 'rechazada'],
+    default: 'activa'
+  }
 }, { collection: 'subscriptions' });
 
 export default mongoose.model('Subscription', subscriptionSchema);
