@@ -3,6 +3,14 @@ import notificarAdmin from './notificarAdmin.js';
 
 // Crea una suscripción nueva para un usuario, según si el plan es gratuito o pago
 const crearSuscripcionParaPlan = async (usuario, plan) => {
+  // Si el plan es gratuito, verifica que el usuario no lo haya usado ya antes
+  if (plan.esGratuito) {
+    const yaUsoGratis = await Subscription.findOne({ usuarioId: usuario._id, planId: plan._id });
+    if (yaUsoGratis) {
+      throw new Error('PLAN_GRATUITO_YA_USADO');
+    }
+  }
+
   // Cancela cualquier solicitud pendiente anterior del mismo usuario antes de crear una nueva
   await Subscription.updateMany(
     { usuarioId: usuario._id, estado: 'pendiente' },
