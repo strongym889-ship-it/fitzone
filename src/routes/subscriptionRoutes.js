@@ -2,12 +2,14 @@ import express from 'express';
 import {
   obtenerSuscripcionPorUsuario,
   verificarVencimientos, cambiarPlan, limpiarCanceladas,
-  obtenerPendientes, aprobarSuscripcion, rechazarSuscripcion
+  obtenerPendientes, aprobarSuscripcion, rechazarSuscripcion,
+  obtenerMiSuscripcion
 } from '../controllers/subscriptionController.js';
 import verificarToken, { verificarDueño, verificarAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
+router.get('/me', verificarToken, obtenerMiSuscripcion);
 router.get('/usuario/:usuarioId', verificarToken, verificarDueño, obtenerSuscripcionPorUsuario);
 router.post('/cambiar-plan', verificarToken, cambiarPlan);
 

@@ -22,6 +22,13 @@ const seed = async () => {
       precio: 80000,
       esGratuito: false,
       beneficios: ['Acceso completo', 'Entrenador asignado', 'Rutinas personalizadas']
+    },
+    {
+      nombre: 'Anual',
+      duracionDias: 365,
+      precio: 800000,
+      esGratuito: false,
+      beneficios: ['Acceso completo', 'Entrenador asignado', 'Rutinas personalizadas', 'Descuento anual', 'Evaluación física trimestral']
     }
   ];
 

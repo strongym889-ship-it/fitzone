@@ -105,7 +105,6 @@ export const aprobarSuscripcion = async (req, res) => {
       return res.status(400).json({ mensaje: `Esta solicitud ya fue ${suscripcion.estado}` });
     }
 
-    // Nuevo: no aprobar pagos de cuentas sin verificar
     if (!suscripcion.usuarioId.cuentaVerificada) {
       return res.status(400).json({
         mensaje: 'No se puede aprobar: el usuario aún no ha verificado su cuenta'
@@ -166,6 +165,37 @@ export const rechazarSuscripcion = async (req, res) => {
     });
 
     res.json({ mensaje: 'Suscripción rechazada', suscripcion });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Devuelve el estado del plan del usuario autenticado (para pantallas tipo "mi plan")
+export const obtenerMiSuscripcion = async (req, res) => {
+  try {
+    const suscripcion = await Subscription.findOne({ usuarioId: req.usuario.id, estado: 'activa' })
+      .populate('planId', 'nombre precio duracionDias beneficios esGratuito')
+      .sort({ fechaFin: -1 });
+
+    if (!suscripcion) {
+      return res.json({
+        tieneSuscripcionActiva: false,
+        mensaje: 'No tienes un plan activo'
+      });
+    }
+
+    const ahora = new Date();
+    const msRestantes = suscripcion.fechaFin - ahora;
+    const diasRestantes = Math.max(0, Math.ceil(msRestantes / (1000 * 60 * 60 * 24)));
+
+    res.json({
+      tieneSuscripcionActiva: true,
+      plan: suscripcion.planId,
+      estado: suscripcion.estado,
+      fechaInicio: suscripcion.fechaInicio,
+      fechaFin: suscripcion.fechaFin,
+      diasRestantes
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
