@@ -3,8 +3,9 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import User from '../models/User.js';
 import Plan from '../models/Plan.js';
-import transporter from '../config/mailer.js';
+import transporter from '../utils/mailer.js';
 import { crearSuscripcionParaPlan } from '../helpers/suscripciones.js';
+import { borrarImagenCloudinary } from '../utils/cloudinary.js';
 
 // Registro
 export const registrarUsuario = async (req, res) => {
@@ -142,7 +143,7 @@ export const obtenerUsuario = async (req, res) => {
   }
 };
 
-// Actualizar usuario (lista blanca de campos editables)
+// Actualizar usuario (lista blanca de campos editables + foto de perfil opcional)
 export const actualizarUsuario = async (req, res) => {
   try {
     const camposPermitidos = ['nombre', 'telefono'];
@@ -157,8 +158,18 @@ export const actualizarUsuario = async (req, res) => {
       if (req.body.estadoCuenta !== undefined) datosActualizar.estadoCuenta = req.body.estadoCuenta;
     }
 
+    const usuarioActual = await User.findById(req.params.id);
+    if (!usuarioActual) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+
+    if (req.file) {
+      if (usuarioActual.fotoPerfilId) {
+        await borrarImagenCloudinary(usuarioActual.fotoPerfilId);
+      }
+      datosActualizar.fotoPerfil = req.file.path;
+      datosActualizar.fotoPerfilId = req.file.filename;
+    }
+
     const usuario = await User.findByIdAndUpdate(req.params.id, datosActualizar, { new: true });
-    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     res.json(usuario);
   } catch (error) {
     res.status(500).json({ error: error.message });

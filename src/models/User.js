@@ -13,8 +13,12 @@ const userSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpira: Date,
 
+  // Foto de perfil (Cloudinary)
+  fotoPerfil: String,
+  fotoPerfilId: String,
+
   // Verificación de cuenta por correo
-  cuentaVerificada: { type: Boolean, default: true }, // true por defecto: no rompe usuarios existentes
+  cuentaVerificada: { type: Boolean, default: true },
   codigoVerificacion: String,
   codigoVerificacionExpira: Date
 }, {
@@ -26,6 +30,7 @@ const userSchema = new mongoose.Schema({
       delete ret.resetPasswordExpira;
       delete ret.codigoVerificacion;
       delete ret.codigoVerificacionExpira;
+      delete ret.fotoPerfilId; // el cliente no necesita el public_id interno
       return ret;
     }
   }

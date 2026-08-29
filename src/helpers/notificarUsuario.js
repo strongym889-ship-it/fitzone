@@ -1,5 +1,5 @@
 import Notification from '../models/Notification.js';
-import transporter from '../config/mailer.js';
+import transporter from '../utils/mailer.js';
 
 const notificarUsuario = async (usuario, { mensaje, asuntoCorreo, htmlCorreo }) => {
   try {
