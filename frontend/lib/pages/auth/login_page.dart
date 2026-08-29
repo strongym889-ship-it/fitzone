@@ -34,10 +34,21 @@ class _LoginPageState extends State<LoginPage> {
     final email = emailController.text.trim();
     final password = passwordController.text;
 
-    if (email.isEmpty || password.isEmpty) {
-      mostrarMensaje('Completa todos los campos');
-      return;
-    }
+     if (email.isEmpty || password.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Por favor completa todos los campos'),
+      ),
+    );
+    return;
+  }
+
+    Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const WelcomePage(),
+    ),
+  );
 
     setState(() {
       loading = true;
@@ -449,3 +460,4 @@ class _SocialButton extends StatelessWidget {
     );
   }
 }
+

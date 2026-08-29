@@ -13,7 +13,7 @@ class ApiService {
     http://192.168.1.10:4000/api
   */
 
-  static const String baseUrl = 'http://10.0.2.2:4000/api';
+static const String baseUrl = 'http://localhost:4000/api';
 
   Future<Map<String, dynamic>> post(
     String endpoint,
