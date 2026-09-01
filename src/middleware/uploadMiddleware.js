@@ -1,10 +1,11 @@
 import multer from 'multer';
 import CloudinaryStorage from 'multer-storage-cloudinary';
-import cloudinary from '../utils/cloudinary.js';
+import cloudinaryPackage from 'cloudinary'; // paquete completo, con .v2 adentro
+import '../utils/cloudinary.js'; // solo para que se ejecute cloudinary.config(...) antes de usarlo aquí
 
 const crearUploadMiddleware = (carpeta) => {
   const storage = new CloudinaryStorage({
-    cloudinary,
+    cloudinary: cloudinaryPackage,
     params: {
       folder: `fitzone/${carpeta}`,
       allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],

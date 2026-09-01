@@ -165,8 +165,8 @@ export const actualizarUsuario = async (req, res) => {
       if (usuarioActual.fotoPerfilId) {
         await borrarImagenCloudinary(usuarioActual.fotoPerfilId);
       }
-      datosActualizar.fotoPerfil = req.file.path;
-      datosActualizar.fotoPerfilId = req.file.filename;
+      datosActualizar.fotoPerfil = req.file.secure_url;
+      datosActualizar.fotoPerfilId = req.file.public_id;
     }
 
     const usuario = await User.findByIdAndUpdate(req.params.id, datosActualizar, { new: true });
